@@ -2,6 +2,7 @@ package com.tenniscourts.reservations;
 
 import com.sun.xml.bind.v2.schemagen.xmlschema.Any;
 import com.tenniscourts.config.BaseRestController;
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -38,7 +39,7 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<Object> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
         try {
             return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
-        }catch (EntityNotFoundException e){
+        }catch (EntityNotFoundException | BusinessException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

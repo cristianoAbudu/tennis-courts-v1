@@ -1,5 +1,6 @@
 package com.tenniscourts.reservations;
 
+import com.tenniscourts.exceptions.BusinessException;
 import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.guests.Guest;
 import com.tenniscourts.guests.GuestRepository;
@@ -99,13 +100,12 @@ public class ReservationService {
         return BigDecimal.ZERO;
     }
 
-    /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
-            "Cannot reschedule to the same slot.*/
+
     public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) throws EntityNotFoundException {
         Reservation previousReservation = cancel(previousReservationId);
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
-            throw new IllegalArgumentException("Cannot reschedule to the same slot.");
+            throw new BusinessException("Cannot reschedule to the same slot.");
         }
 
         previousReservation.setReservationStatus(ReservationStatus.RESCHEDULED);
