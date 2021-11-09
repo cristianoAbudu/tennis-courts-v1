@@ -24,15 +24,18 @@ public class ReservationController extends BaseRestController {
         }
     }
 
-    public ResponseEntity<ReservationDTO> findReservation(Long reservationId) {
+    @GetMapping
+    public ResponseEntity<ReservationDTO> findReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    public ResponseEntity<ReservationDTO> cancelReservation(Long reservationId) {
+    @PutMapping("/cancelReservation/")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
-    public ResponseEntity<Object> rescheduleReservation(Long reservationId, Long scheduleId) {
+    @PutMapping("/rescheduleReservation")
+    public ResponseEntity<Object> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
         try {
             return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
         }catch (EntityNotFoundException e){
