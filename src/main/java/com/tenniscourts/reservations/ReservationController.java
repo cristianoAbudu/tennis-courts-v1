@@ -25,20 +25,29 @@ public class ReservationController extends BaseRestController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/{reservationId}")
     public ResponseEntity<ReservationDTO> findReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.findReservation(reservationId));
     }
 
-    @PutMapping("/cancelReservation/")
+    @PutMapping("/cancelReservation/{reservationId}")
     public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable Long reservationId) {
         return ResponseEntity.ok(reservationService.cancelReservation(reservationId));
     }
 
     @PutMapping("/rescheduleReservation")
-    public ResponseEntity<Object> rescheduleReservation(@PathVariable Long reservationId, @PathVariable Long scheduleId) {
+    public ResponseEntity<Object> rescheduleReservation(@RequestParam Long reservationId, @RequestParam Long scheduleId) {
         try {
             return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
+        }catch (EntityNotFoundException | BusinessException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/admin/refund/{reservationId}")
+    public ResponseEntity<Object> refund(@PathVariable Long reservationId) {
+        try {
+            return ResponseEntity.ok(reservationService.refund(reservationId));
         }catch (EntityNotFoundException | BusinessException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }

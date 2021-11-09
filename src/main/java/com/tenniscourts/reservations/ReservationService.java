@@ -25,7 +25,7 @@ public class ReservationService {
     private final ReservationMapper reservationMapper;
 
     public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) throws EntityNotFoundException {
-        Reservation reservation = new Reservation(); guestRepository.findAll();
+        Reservation reservation = new Reservation();
 
         Optional<Guest> guestOptional = guestRepository.findById(createReservationRequestDTO.getGuestId());
         if(guestOptional.isEmpty()){
@@ -42,6 +42,8 @@ public class ReservationService {
 
         reservation.setGuest(guest);
         reservation.setSchedule(schedule);
+
+        // Charge user on 10 every time he schedules
         reservation.setValue(new BigDecimal(10));
 
         reservationRepository.save(reservation);
@@ -117,5 +119,21 @@ public class ReservationService {
                 .build());
         newReservation.setPreviousReservation(reservationMapper.map(previousReservation));
         return newReservation;
+    }
+
+    public ReservationDTO refund(Long reservationId) {
+
+        Optional<Reservation> optional = reservationRepository.findById(reservationId);
+        if(optional.isEmpty()){
+            throw new EntityNotFoundException("No reservation found with given id");
+        }
+
+        Reservation reservation = optional.get();
+
+        // Refund
+        reservation.setRefundValue(new BigDecimal(10));
+
+        return reservationMapper.map(reservationRepository.save(reservation));
+
     }
 }
