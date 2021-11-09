@@ -15,12 +15,6 @@ public class ReservationController extends BaseRestController {
 
     private final ReservationService reservationService;
 
-    @GetMapping
-    public ResponseEntity<Void> get() {
-        System.out.println("teste");
-        return null;
-    }
-
     @PostMapping("/bookReservation")
     public ResponseEntity<Object> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         try {
