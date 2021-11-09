@@ -95,11 +95,23 @@ public class ReservationService {
     public BigDecimal getRefundValue(Reservation reservation) {
         long hours = ChronoUnit.HOURS.between(LocalDateTime.now(), reservation.getSchedule().getStartDateTime());
 
+        // Refund all if cancelled more than 24 hours before reservation
         if (hours >= 24) {
             return reservation.getValue();
         }
 
-        return BigDecimal.ZERO;
+        // 25% of the reservation fee if the User cancels or reschedules between 12:00 and 23:59 hours in advance
+        if(hours >= 12){
+            return reservation.getValue().multiply(new BigDecimal(0.75));
+        }
+
+        // 50% between 2:00 and 11:59 in advance
+        if(hours >= 2){
+            return reservation.getValue().multiply(new BigDecimal(0.5));
+        }
+
+        // 75% between 0:01 and 2:00 in advance
+        return reservation.getValue().multiply(new BigDecimal(0.25));
     }
 
 
