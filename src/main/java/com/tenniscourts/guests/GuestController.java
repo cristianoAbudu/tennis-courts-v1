@@ -15,7 +15,7 @@ import javax.ws.rs.Path;
 import java.util.List;
 
 @RestController
-@RequestMapping("guests")
+@RequestMapping("private/guests")
 @AllArgsConstructor
 public class GuestController extends BaseRestController {
 
