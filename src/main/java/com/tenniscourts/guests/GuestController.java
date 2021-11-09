@@ -1,11 +1,11 @@
 package com.tenniscourts.guests;
 
 import com.tenniscourts.config.BaseRestController;
+import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.guests.CreateGuestRequestDTO;
 import com.tenniscourts.guests.GuestDTO;
 import com.tenniscourts.guests.GuestService;
 import com.tenniscourts.reservations.CreateReservationRequestDTO;
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +30,7 @@ public class GuestController extends BaseRestController {
     public ResponseEntity<Object> update(@RequestBody GuestDTO guestDTO) {
         try {
             return ResponseEntity.created(locationByEntity(guestService.update(guestDTO).getId())).build();
-        }catch (NotFoundException e){
+        }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -39,7 +39,7 @@ public class GuestController extends BaseRestController {
     public ResponseEntity<Object> findById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(guestService.findById(id));
-        }catch (NotFoundException e){
+        }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -61,7 +61,7 @@ public class GuestController extends BaseRestController {
         try {
             guestService.delete(id);
             return ResponseEntity.ok("Guest deleted");
-        }catch (NotFoundException e){
+        }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

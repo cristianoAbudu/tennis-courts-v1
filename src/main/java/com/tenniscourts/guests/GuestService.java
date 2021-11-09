@@ -4,7 +4,6 @@ import com.tenniscourts.exceptions.EntityNotFoundException;
 import com.tenniscourts.guests.*;
 import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleRepository;
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +27,19 @@ public class GuestService {
 
     }
 
-    public GuestDTO update(GuestDTO guestDTO) throws NotFoundException {
+    public GuestDTO update(GuestDTO guestDTO) throws EntityNotFoundException {
 
         if (guestRepository.findById(guestDTO.getId()).isEmpty()) {
-            throw new NotFoundException("No guests found with given id");
+            throw new EntityNotFoundException("No guests found with given id");
         }
         return guestMapper.map(guestRepository.save(guestMapper.map(guestDTO)));
 
     }
 
-    public GuestDTO findById(Long id) throws NotFoundException {
+    public GuestDTO findById(Long id) throws EntityNotFoundException {
         Optional<Guest> guestOptional = guestRepository.findById(id);
         if (guestOptional.isEmpty()) {
-            throw new NotFoundException("No guests found with given id");
+            throw new EntityNotFoundException("No guests found with given id");
         }
         return guestMapper.map(guestOptional.get());
     }
@@ -50,10 +49,10 @@ public class GuestService {
 
     }
 
-    public void delete(Long id) throws NotFoundException {
+    public void delete(Long id) throws EntityNotFoundException {
         Optional<Guest> guestOptional = guestRepository.findById(id);
         if (guestOptional.isEmpty()) {
-            throw new NotFoundException("No guests found with given id");
+            throw new EntityNotFoundException("No guests found with given id");
         }
         guestRepository.delete(guestOptional.get());
     }

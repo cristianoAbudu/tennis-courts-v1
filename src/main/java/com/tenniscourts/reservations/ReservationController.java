@@ -2,7 +2,7 @@ package com.tenniscourts.reservations;
 
 import com.sun.xml.bind.v2.schemagen.xmlschema.Any;
 import com.tenniscourts.config.BaseRestController;
-import javassist.NotFoundException;
+import com.tenniscourts.exceptions.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<Object> bookReservation(@RequestBody CreateReservationRequestDTO createReservationRequestDTO) {
         try {
             return ResponseEntity.created(locationByEntity(reservationService.bookReservation(createReservationRequestDTO).getId())).build();
-        }catch (NotFoundException e){
+        }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -35,7 +35,7 @@ public class ReservationController extends BaseRestController {
     public ResponseEntity<Object> rescheduleReservation(Long reservationId, Long scheduleId) {
         try {
             return ResponseEntity.ok(reservationService.rescheduleReservation(reservationId, scheduleId));
-        }catch (NotFoundException e){
+        }catch (EntityNotFoundException e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

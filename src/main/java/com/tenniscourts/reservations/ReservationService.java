@@ -5,7 +5,6 @@ import com.tenniscourts.guests.Guest;
 import com.tenniscourts.guests.GuestRepository;
 import com.tenniscourts.schedules.Schedule;
 import com.tenniscourts.schedules.ScheduleRepository;
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +23,17 @@ public class ReservationService {
     private final ScheduleRepository scheduleRepository;
     private final ReservationMapper reservationMapper;
 
-    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) throws NotFoundException {
+    public ReservationDTO bookReservation(CreateReservationRequestDTO createReservationRequestDTO) throws EntityNotFoundException {
         Reservation reservation = new Reservation(); guestRepository.findAll();
 
         Optional<Guest> guestOptional = guestRepository.findById(createReservationRequestDTO.getGuestId());
         if(guestOptional.isEmpty()){
-            throw new NotFoundException("No guests found with given id");
+            throw new EntityNotFoundException("No guests found with given id");
         }
 
         Optional<Schedule> scheduleOptional = scheduleRepository.findById(createReservationRequestDTO.getScheduleId());
         if(scheduleOptional.isEmpty()){
-            throw new NotFoundException("No schedules found with given id");
+            throw new EntityNotFoundException("No schedules found with given id");
         }
 
         Guest guest = guestOptional.get();
@@ -102,7 +101,7 @@ public class ReservationService {
 
     /*TODO: This method actually not fully working, find a way to fix the issue when it's throwing the error:
             "Cannot reschedule to the same slot.*/
-    public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) throws NotFoundException {
+    public ReservationDTO rescheduleReservation(Long previousReservationId, Long scheduleId) throws EntityNotFoundException {
         Reservation previousReservation = cancel(previousReservationId);
 
         if (scheduleId.equals(previousReservation.getSchedule().getId())) {
